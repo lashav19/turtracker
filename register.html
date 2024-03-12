@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-core="modern" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.1/css/halfmoon.min.css"
+      rel="stylesheet"
+      integrity="sha256-SsJizWSIG9JT9Qxbiy8xnYJfjCAkhEQ0hihxRn7jt2M="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="src/style/index.css" />
+    <link
+      rel="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+      type="text/css"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-sm-fluid p-3">
+      <a
+        href="index.html"
+        class="text-info-emphasis link-opacity-100-hover m-5 p-5"
+      >
+        ← Tilbake</a
+      >
+    </div>
+    <div class="container shadow p-5 mt-5 w-50 text-center bg-body-tertiary">
+      <h1>Registrer</h1>
+
+      <div class="container-fluid p-5 text-start">
+        <div class="container m-3">
+          <label for="fornavn" class="form-label h4">Fornavn</label>
+          <label
+            for="etternavn"
+            class="from-label h4 position-lg-absolute start-50 mx-3"
+            >Etternavn</label
+          >
+          <div class="d-flex mb-4">
+            <input
+              type="text"
+              name="fornavn"
+              id="fornavn"
+              class="form-control"
+            />
+            <input
+              type="text"
+              name="etternavn"
+              id="etternavn"
+              class="form-control"
+            />
+          </div>
+          <label for="username" class="form-label h4">Brukernavn</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="form-control"
+          />
+        </div>
+        <div class="container m-3">
+          <label for="password" class="form-label h4">Passord</label>
+          <input
+            type="text"
+            name="password"
+            id="password"
+            class="form-control"
+          />
+          <button class="btn btn-primary p-3 mt-4 w-100">Registrer</button>
+        </div>
+        <a href="login.html" class="link-body-emphasis m-lg-4">Logg inn</a>
+      </div>
+    </div>
+  </body>
+</html>
