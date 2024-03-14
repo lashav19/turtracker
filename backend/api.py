@@ -51,7 +51,6 @@ def loginUser():
         user = auth.get_user_by_email(f"{username}@example.com")
         firebase_user = auth.get_user(user.uid)
 
-
         return firebase_user.uid if firebase_user.password == password else abort(401)
     except Exception as e:
         # Handle error (username not found or incorrect password)
