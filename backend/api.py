@@ -18,6 +18,15 @@ CORS(app)
 def index():
     return render_template('index.html')
 
+@app.route('/register', methods=['GET'])
+def register():
+
+    return render_template('register.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory("../", filename)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -28,8 +37,8 @@ def login():
 @app.route('/api/register', methods=['POST'])
 def registerUser():
 
-        data = request.json
-        username = data.get('username')
+        data = request.json #henter data som blir postet som et json objekt
+        username = data.get('username') 
         password = data.get('password')
         try:
             user = auth.create_user(
@@ -55,25 +64,20 @@ def loginUser():
     except Exception as e:
         # Handle error (username not found or incorrect password)
         print("Error logging in:", e)
-        return None
+        return abort(401)
 
-@app.route('/register', methods=['GET'])
-def register():
 
-    return render_template('register.html')
-
-@app.route('/<path:filename>')
-def serve_static(filename):
-    return send_from_directory("../", filename)
 
 @app.route('/api/turer/add')
 def registrerTur():
-
     ref = db.reference('/')
     #ref.child('turer').push(tur)
-@app.route('/api/turer/')
+
+
+
+@app.route('/api/turer/<string:bruker>')
 def getEvents(id=None):
-    id = request.args.get('i') #for å hente parameter fra post requests
+    id = request.args.get('i') #for å hente parameter fra get requests
     ref = db.reference('turer')
     if id:
         events = ref.child(id).get()
