@@ -22,7 +22,7 @@ if (getCookie("uid")){
         var response = xhr.responseText;
         console.log(response);
         setCookie("uid", response, 2)
-        window.location.replace('/')
+
       } else if (xhr.readyState == 4 && xhr.status != 200) {
         console.error("Error:", xhr.status);
         const alert = document.querySelector(".alert")

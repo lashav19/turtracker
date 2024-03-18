@@ -1,9 +1,23 @@
+import firebase_admin
+import os
+import pyrebase  # ! pip install pyrebase4 ikke pyrebase
 from flask import (Flask, render_template,
                    send_from_directory, request, abort, jsonify)
 from flask_cors import CORS
-import firebase_admin
 from firebase_admin import credentials, db, auth
-import pyrebase  # pip install pyrebase4 ikke pyrebase
+from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
+
+
+UPLOAD_FOLDER = 'backend\\img'
+ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
+
+
+def allowedFile(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+load_dotenv()  # * Laster inn .env filen i environment
 
 cred = credentials.Certificate("backend\\credentials.json")
 firebase_admin.initialize_app(cred, {
@@ -11,21 +25,23 @@ firebase_admin.initialize_app(cred, {
 })
 
 pyrebaseConfig = {
-    "apiKey": "AIzaSyB1B14lAStNgDISeB8GhaeEgFIIKsZlIcI",
-    "authDomain": "turtracker.firebaseapp.com",
-    "databaseURL": "https://turtracker-default-rtdb.europe-west1.firebasedatabase.app",
-    "projectId": "turtracker",
-    "storageBucket": "turtracker.appspot.com",
-    "messagingSenderId": "313773758046",
-    "appId": "1:313773758046:web:256b6e16707c563d9786cf"
+    "apiKey": os.getenv("apiKey"),
+    "authDomain": os.getenv("authDomain"),
+    "databaseURL": os.getenv("databaseURL"),
+    "projectId": os.getenv("projectId"),
+    "storageBucket": os.getenv("storageBucket"),
+    "messagingSenderId": os.getenv("messagingSenderId"),
+    "appId": os.getenv("appId")
 }
-
-app = Flask(__name__, template_folder='../')
-
 fyrebase = pyrebase.initialize_app(pyrebaseConfig)
 
 
+app = Flask(__name__, template_folder='../')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 # ? Page endpoints
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -83,6 +99,22 @@ def loginUser():
 @app.route('/api/test')
 def test():
     return {"Success": True}
+
+
+@app.route('/api/upload/image', methods=['POST'])
+def imgUpload():
+    if 'file' not in request.files:
+        return abort(400)
+
+    file = request.files.get('file')
+    if file.filename == '':
+        return abort(400)
+
+    if file and allowedFile(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+    return jsonify({"message": "File uploaded successfully"}), 200
 
 
 @app.route('/api/turer/add')
