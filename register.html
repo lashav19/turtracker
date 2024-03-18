@@ -25,6 +25,12 @@
       >
     </div>
     <div class="container shadow p-5 mt-5 text-center bg-body-tertiary">
+
+      <div class="alert alert-danger alert-dismissible fade hide" role="alert">
+        <h5>En feil har oppstått</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
       <h1>Registrer</h1>
 
       <div class="container-fluid text-start">
@@ -37,6 +43,7 @@
             id="username"
             class="form-control"
             placeholder="Lag et brukernavn"
+            required
           />
         </div>
         <div class="container m-3">
@@ -47,6 +54,7 @@
             id="password"
             class="form-control"
             placeholder="Lag et passord"
+            required
           />
        </form>
           <button class="btn btn-primary p-3 mt-4 w-100" type="submit">Registrer</button>
@@ -74,8 +82,8 @@
         if (xhr.readyState == 4 && xhr.status == 200) {
           var response = xhr.responseText;
           console.log(response);
-          setCookie("uid", response, 2)
-          window.location.replace('/')
+          window.location.replace('/login')
+          
         } else if (xhr.readyState == 4 && xhr.status != 200) {
           console.error("Error:", xhr.status);
         }

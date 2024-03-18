@@ -14,7 +14,8 @@
       rel="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
       type="text/css"
     />
-    <title>Document</title>
+
+    <title>Logg inn</title>
   </head>
   <body>
     <div class="container-sm-fluid p-3">
@@ -26,6 +27,10 @@
       >
     </div>
     <div class="container shadow p-5 mt-5 text-center bg-body-tertiary">
+      <div class="alert alert-danger alert-dismissible hide" role="alert">
+        <h5>Feil brukernavn eller passord</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
       <h1>Logg inn</h1>
       <div class="container-fluid text-start">
         <div class="container m-3">
@@ -52,33 +57,7 @@
         <a href="register" class="link-body-emphasis m-lg-4">Registrer</a>
       </div>
     </div>
-    <script defer>
-      const form = document.querySelector('#loginForm')
-      form.addEventListener('submit', (event) => {
-    
-        event.preventDefault()
-        console.log("Submitted");
-        const username = document.querySelector("#username").value
-        const password = document.querySelector("#password").value
-        const xhr = new XMLHttpRequest()
-        var reqBody = JSON.stringify({
-          username: username,
-          password: password
-        })
-        xhr.open("POST", '/api/login', true)
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            var response = xhr.responseText;
-            console.log(response);
-            setCookie("uid", response, 2)
-          } else if (xhr.readyState == 4 && xhr.status != 200) {
-            console.error("Error:", xhr.status);
-          }
-        };
-        console.log("request sent");
-        xhr.send(reqBody);
-      })
-    </script>
+    <script src="src/script/utils.js"></script>
+    <script src="src/script/login.js" defer></script> <!-- defer for å passe på at den loader etter alt annet-->
   </body>
 </html>

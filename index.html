@@ -18,7 +18,7 @@
     />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/solid.min.css" integrity="sha512-pZlKGs7nEqF4zoG0egeK167l6yovsuL8ap30d07kA5AJUq+WysFlQ02DLXAmN3n0+H3JVz5ni8SJZnrOaYXWBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="src/script/bar-chart.js" defer></script>
+    <script src="src/script/utils.js" ></script>
     <title>Tur Trackern</title>
   </head>
   <body>
@@ -27,12 +27,11 @@
         <h2 class="text-body-emphasis">Turtrackern'</h2>
         <div>
           <ul class="navbar-nav me-auto mb-2 d">
-            <li class="nav-item">
+            <li class="nav-item" id="loginContainer">
               <a
-                href="login"
-                id="login"
-                class="nav-link text-body text-nowrap"
-                >Logg inn</a
+                id="logout"
+                class="pointer user-select-none nav-link text-body text-nowrap"
+                >Logg ut</a
               >
             </li>
         </div>
@@ -123,6 +122,22 @@
         </table>
       </div>
     </div>
-    <script></script>
+
+    <script defer>
+      const loginContainer = document.querySelector("#loginContainer")
+      const logout = document.querySelector("#logout")
+      if (getCookie("uid")){
+        loginContainer.classList.remove("invisible")
+        console.log(true);
+      } else {
+        console.log(false);
+        window.location.replace('/login')
+        loginContainer.classList.add("invisible")
+      }
+      logout.addEventListener('click', () => {
+        setCookie("uid", "", 2)
+        window.location.replace("/login")
+       })
+    </script>
   </body>
 </html>
