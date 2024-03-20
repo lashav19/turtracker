@@ -16,7 +16,10 @@
       rel="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
       type="text/css"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/solid.min.css" integrity="sha512-pZlKGs7nEqF4zoG0egeK167l6yovsuL8ap30d07kA5AJUq+WysFlQ02DLXAmN3n0+H3JVz5ni8SJZnrOaYXWBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="src/script/utils.js" ></script>
     <title>Tur Trackern</title>
@@ -62,7 +65,9 @@
               </div>
               <div class="mt-4 d-flex flex-column">
                 <label for="file-input">Bilde</label>
-                <button class="btn btn-primary" type="button">Ta bilde</button>
+                <button type="button" class="btn btn-primary w-25 pt-0" name="file-input" onclick="document.getElementById('file-input').click();"><i class="fa fa-camera"></i></button>
+                <input type="file" accept="image/*" name="file-input" id="file-input" class="hide" capture>
+                
               </div>
             </div>
             <div class=" d-flex m-3 ">
@@ -138,6 +143,15 @@
         setCookie("uid", "", 2)
         window.location.replace("/login")
        })
+       document.getElementById("file-input").addEventListener("change", function() {
+      var files = this.files;
+      if (files.length > 0) {
+        var fileName = files[0].name;
+        document.getElementById("file-name").textContent = fileName;
+      } else {
+        document.getElementById("file-name").textContent = "";
+      }
+    });
     </script>
   </body>
 </html>

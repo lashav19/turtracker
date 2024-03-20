@@ -24,7 +24,7 @@
         ← Tilbake</a
       >
     </div>
-    <div class="container shadow p-5 mt-5 text-center bg-body-tertiary">
+    <div class="container shadow p-5 mt-5 text-center bg-body-tertiary w-75">
 
       <div class="alert alert-danger alert-dismissible fade hide" role="alert">
         <h5>En feil har oppstått</h5>
@@ -33,33 +33,39 @@
 
       <h1>Registrer</h1>
 
-      <div class="container-fluid text-start">
-       <form id="registerForm" action="">
-        <div class="container m-3">
-          <label for="username" class="form-label h4">Brukernavn</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            class="form-control"
-            placeholder="Lag et brukernavn"
-            required
-          />
+      <div class="container-fluid text-start px-3">
+        <div class="p-3">
+          <form id="loginForm" action="">
+            <div class="form-floating container-sm-fluid">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="form-control"
+                placeholder="Brukernavn"
+              />
+              <label for="username">Lag et brukernavn</label>
+            </div>
+            <div class="pt-3">
+              <div class="form-floating container-sm-fluid text-start">
+              
+                <input
+                  type="text"
+                  name="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="password"
+                />
+                <label for="password" >Lag et passord</label>
+                <button class="btn btn-primary p-3 mt-2 w-100 mb-3">Logg inn</button>
+                
+              </div>
+            </div>
+          </form>
+          <div class="pb-3">
+            <a href="login" class="link-body-emphasis m-sm-4">logg inn</a>
+          </div>
         </div>
-        <div class="container m-3">
-          <label for="password" class="form-label h4">Passord</label>
-          <input
-            type="text"
-            name="password"
-            id="password"
-            class="form-control"
-            placeholder="Lag et passord"
-            required
-          />
-       </form>
-          <button class="btn btn-primary p-3 mt-4 w-100" type="submit">Registrer</button>
-        </div>
-        <a href="login" class="link-body-emphasis m-lg-4">Logg inn</a>
       </div>
     </div>
   </body>

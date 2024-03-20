@@ -7,6 +7,7 @@ from flask_cors import CORS
 from firebase_admin import credentials, db, auth
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+import uuid
 
 
 UPLOAD_FOLDER = 'backend\\img'
@@ -24,7 +25,8 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': "https://eventkalender-d93af-default-rtdb.europe-west1.firebasedatabase.app/"
 })
 
-pyrebaseConfig = {
+
+fyrebase = pyrebase.initialize_app({
     "apiKey": os.getenv("apiKey"),
     "authDomain": os.getenv("authDomain"),
     "databaseURL": os.getenv("databaseURL"),
@@ -32,8 +34,7 @@ pyrebaseConfig = {
     "storageBucket": os.getenv("storageBucket"),
     "messagingSenderId": os.getenv("messagingSenderId"),
     "appId": os.getenv("appId")
-}
-fyrebase = pyrebase.initialize_app(pyrebaseConfig)
+})
 
 
 app = Flask(__name__, template_folder='../')
@@ -103,6 +104,7 @@ def test():
 
 @app.route('/api/upload/image', methods=['POST'])
 def imgUpload():
+    
     if 'file' not in request.files:
         return abort(400)
 
@@ -111,8 +113,21 @@ def imgUpload():
         return abort(400)
 
     if file and allowedFile(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        storage = fyrebase.storage() # firebase storage
+
+
+        # Henter fil extension som png, jpeg osv
+        original_filename = secure_filename(file.filename)
+        file_extension = os.path.splitext(original_filename)[1].lower()
+
+        # Genererer en unikt filnavn for bildet
+        uuid_filename = str(uuid.uuid4()) + file_extension
+        
+        # Lagrer bildet
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], uuid_filename)
+        file.save(save_path)
+        storage.child(uuid_filename).put(save_path)
+        os.remove(save_path)
 
     return jsonify({"message": "File uploaded successfully"}), 200
 
@@ -124,18 +139,15 @@ def registrerTur():
 
 
 @app.route('/api/turer/<string:bruker>')
-def getEvents(id=None):
-    id = request.args.get('i')  # for å hente parameter fra get requests
+def getEvents(bruker=None):
+    id = request.args.get('i')  # for å hente parameter fra requesten
     ref = db.reference('turer')
     if id:
-        events = ref.child(id).get()
-        return events
-
+        return ref.child(id).get()
+    
     events = ref.get()
-    if events:
-        return events
-    else:
-        abort(404)
+    return events if events else abort(404)
+
 
 
 if __name__ == "__main__":
