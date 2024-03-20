@@ -72,22 +72,24 @@
   <script defer>
     const form = document.querySelector('#registerForm')
     form.addEventListener('submit', (event) => {
-  
       event.preventDefault()
       console.log("Submitted");
       const username = document.querySelector("#username").value
       const password = document.querySelector("#password").value
+
       const xhr = new XMLHttpRequest()
+
       var reqBody = JSON.stringify({
         username: username,
         password: password
       })
+
       xhr.open("POST", '/api/register', true)
       xhr.setRequestHeader("Content-type", "application/json");
+
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
           var response = xhr.responseText;
-          console.log(response);
           window.location.replace('/login')
           
         } else if (xhr.readyState == 4 && xhr.status != 200) {

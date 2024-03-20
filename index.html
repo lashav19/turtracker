@@ -56,17 +56,50 @@
                 <option value="">Kjerringlia</option>
               </select>
               <div class="d-flex mt-3">
-                <label for="start" class="flex-fill">start</label>
                 <label for="slutt" class="flex-fill">slutt</label>
               </div>
               <div class="d-flex">
                 <input type="time" class="form-control" name="slutt">
-                <input type="time" class="form-control" name="slutt">
               </div>
               <div class="mt-4 d-flex flex-column">
                 <label for="file-input">Bilde</label>
-                <button type="button" class="btn btn-primary w-25 pt-0" name="file-input" onclick="document.getElementById('file-input').click();"><i class="fa fa-camera"></i></button>
+                <button type="button" class="btn btn-primary w-25 mt-2 p-3" name="file-input" onclick="document.getElementById('file-input').click();"><i class="fa fa-camera"></i></button>
                 <input type="file" accept="image/*" name="file-input" id="file-input" class="hide" capture>
+                
+              </div>
+            </div>
+            <div class=" d-flex m-3 ">
+              <button type="button" class="btn btn-secondary p-2 flex-fill" data-bs-dismiss="modal" type="reset">Avbryt</button>
+              <button type="button" class="btn btn-primary p-2 flex-fill" type="submit">Registrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="pastTur" tabindex="-1" aria-labelledby="modal-title-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modal-title-1">Registrer tur</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <label for="turer" class="form-label">Velg tur</label>
+              <select name="turer" class="form-select p-2">
+                <option value="">Galdhøpiggen</option>
+                <option value="">Kjerringlia</option>
+              </select>
+              <div class="d-flex mt-3">
+                <label for="slutt" class="flex-fill">slutt</label>
+              </div>
+              <div class="d-flex">
+                <input type="time" class="form-control" name="slutt">
+              </div>
+              <div class="mt-4 d-flex flex-column">
+                <label for="file-input">Last opp bilde</label>
+                <button type="button" class="btn btn-primary w-25 mt-2 p-3" name="file-input" onclick="document.getElementById('file-upload').click();"><i class="fa fa-cloud-arrow-up"></i></button>
+                <input type="file" accept="image/*" name="file-input" id="file-upload" class="hide">
                 
               </div>
             </div>
@@ -80,18 +113,28 @@
     </div>
     <div class="container-sm">
       <div class="container-sm my-5 shadow p-3 rounded-1 bg-body-tertiary-subtle text-nowrap">
-        <div class="d-flex p-2">
-          <h1 class="flex-fill">Mine turer</h1>
 
-          <button
+          <h1 class="">Mine turer</h1>
+
+         <div class="h-100 text-body mb-3 rounded-3 h-50 align-self-end my-3">
+            <button
             type="button"
             role="button"
-            class="btn btn-outline-success border-2 text-body p-2 mb-2 rounded-3 h-50 align-self-end"
+            class="btn btn-outline-success border-2 p-2"
             data-bs-toggle="modal" 
             data-bs-target="#lagTur"
-          >
+            >
             Registrer Tur
-          </button>
+            </button>
+            <button
+            type="button"
+            role="button"
+            class="btn btn-outline-info border-2 p-2"
+            data-bs-toggle="modal" 
+            data-bs-target="#pastTur"
+          >
+          Glemt å registrere?
+
           
         </div>
         <table class="table bg-body rounded-1 container-fluid shadow">

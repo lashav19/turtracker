@@ -90,7 +90,6 @@ def loginUser():
         # Henter bruker fra firebase auth basert på brukernavn
         user = auth.sign_in_with_email_and_password(
             f"{username}@example.com", password)
-
         return user['localId']
     except Exception as e:
         print("Error logging in:", e)
