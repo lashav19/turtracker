@@ -51,9 +51,7 @@
             </div>
             <div class="modal-body">
               <label for="turer" class="form-label">Velg tur</label>
-              <select name="turer" class="form-select p-2">
-                <option value="">Galdhøpiggen</option>
-                <option value="">Kjerringlia</option>
+              <select name="turer" id="turOption" class="form-select p-2">
               </select>
               <div class="d-flex mt-3">
                 <label for="slutt" class="flex-fill">slutt</label>
@@ -65,41 +63,6 @@
                 <label for="file-input">Bilde</label>
                 <button type="button" class="btn btn-primary w-25 mt-2 p-3" name="file-input" onclick="document.getElementById('file-input').click();"><i class="fa fa-camera"></i></button>
                 <input type="file" accept="image/*" name="file-input" id="file-input" class="hide" capture>
-                
-              </div>
-            </div>
-            <div class=" d-flex m-3 ">
-              <button type="button" class="btn btn-secondary p-2 flex-fill" data-bs-dismiss="modal" type="reset">Avbryt</button>
-              <button type="button" class="btn btn-primary p-2 flex-fill" type="submit">Registrer</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="pastTur" tabindex="-1" aria-labelledby="modal-title-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form action="">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="modal-title-1">Registrer tur</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <label for="turer" class="form-label">Velg tur</label>
-              <select name="turer" class="form-select p-2">
-                <option value="">Galdhøpiggen</option>
-                <option value="">Kjerringlia</option>
-              </select>
-              <div class="d-flex mt-3">
-                <label for="slutt" class="flex-fill">slutt</label>
-              </div>
-              <div class="d-flex">
-                <input type="time" class="form-control" name="slutt">
-              </div>
-              <div class="mt-4 d-flex flex-column">
-                <label for="file-input">Last opp bilde</label>
-                <button type="button" class="btn btn-primary w-25 mt-2 p-3" name="file-input" onclick="document.getElementById('file-upload').click();"><i class="fa fa-cloud-arrow-up"></i></button>
-                <input type="file" accept="image/*" name="file-input" id="file-upload" class="hide">
                 
               </div>
             </div>
@@ -126,16 +89,6 @@
             >
             Registrer Tur
             </button>
-            <button
-            type="button"
-            role="button"
-            class="btn btn-outline-info border-2 p-2"
-            data-bs-toggle="modal" 
-            data-bs-target="#pastTur"
-          >
-          Glemt å registrere?
-
-          
         </div>
         <table class="table bg-body rounded-1 container-fluid shadow">
           <tr>
@@ -149,52 +102,17 @@
         class="container-fluid my-5 shadow p-3 rounded-1 bg-light-subtle"
       >
         <h1>Alle turer</h1>
-        <table class="table bg-body rounded-3 shadow">
+        <table class="table bg-body rounded-3 shadow" id="Turer">
           <tr>
             <th>Vanskelighetsgrad</th>
             <th>Sted</th>
             <th>M.o.h</th>
           </tr>
-          <tbody>
-            <tr>
-              <td>10</td>
-              <td>Galdhøpiggen</td>
-              <td>2469</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Kjerringlia</td>
-              <td>632</td>
-            </tr>
-          </tbody>
         </table>
       </div>
     </div>
 
-    <script defer>
-      const loginContainer = document.querySelector("#loginContainer")
-      const logout = document.querySelector("#logout")
-      if (getCookie("uid")){
-        loginContainer.classList.remove("invisible")
-        console.log(true);
-      } else {
-        console.log(false);
-        window.location.replace('/login')
-        loginContainer.classList.add("invisible")
-      }
-      logout.addEventListener('click', () => {
-        setCookie("uid", "", 2)
-        window.location.replace("/login")
-       })
-       document.getElementById("file-input").addEventListener("change", function() {
-      var files = this.files;
-      if (files.length > 0) {
-        var fileName = files[0].name;
-        document.getElementById("file-name").textContent = fileName;
-      } else {
-        document.getElementById("file-name").textContent = "";
-      }
-    });
+    <script src="src/script/index.js" defer>
     </script>
   </body>
 </html>

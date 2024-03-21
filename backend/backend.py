@@ -20,11 +20,6 @@ def allowedFile(filename):
 
 load_dotenv()  # * Laster inn .env filen i environment
 
-cred = credentials.Certificate("backend\\credentials.json")
-firebase_admin.initialize_app(cred, {
-    'databaseURL': "https://eventkalender-d93af-default-rtdb.europe-west1.firebasedatabase.app/"
-})
-
 
 fyrebase = pyrebase.initialize_app({
     "apiKey": os.getenv("apiKey"),
@@ -36,9 +31,35 @@ fyrebase = pyrebase.initialize_app({
     "appId": os.getenv("appId")
 })
 
+cred = credentials.Certificate("backend\\credentials.json")
+firebase_admin.initialize_app(cred, {
+    'databaseURL': "https://eventkalender-d93af-default-rtdb.europe-west1.firebasedatabase.app/"
+})
+
+db = fyrebase.database()
 
 app = Flask(__name__, template_folder='../')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def uploadIMG(file):
+
+    storage = fyrebase.storage()  # firebase storage
+    # Henter fil extension som png, jpeg osv
+    original_filename = secure_filename(file.filename)
+    file_extension = os.path.splitext(original_filename)[1].lower()
+
+    # Genererer en unikt filnavn for bildet
+    uuid_filename = str(uuid.uuid4()) + file_extension
+
+    # Lagrer bildet
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'], uuid_filename)
+    file.save(save_path)
+    storage.child(uuid_filename).put(save_path)
+    os.remove(save_path)
+    # Henter URL'en for bildet
+    image_url = storage.child(uuid_filename).get_url(None)
+    return image_url
 
 # ? Page endpoints
 
@@ -96,45 +117,24 @@ def loginUser():
         return abort(401)  # 401 error hvis det er feil brukernavn
 
 
-@app.route('/api/test')
-def test():
-    return {"Success": True}
+@app.route('/api/turer/add', methods=['POST'])
+def registrerTur():
 
-
-@app.route('/api/upload/image', methods=['POST'])
-def imgUpload():
-    
+    ref = db.reference('/')
     if 'file' not in request.files:
         return abort(400)
 
     file = request.files.get('file')
+    topp = request.json.get('topp')
+    topTime = request.json.get('end')
     if file.filename == '':
         return abort(400)
 
     if file and allowedFile(file.filename):
-        storage = fyrebase.storage() # firebase storage
+        image_url = uploadIMG(file)
 
-
-        # Henter fil extension som png, jpeg osv
-        original_filename = secure_filename(file.filename)
-        file_extension = os.path.splitext(original_filename)[1].lower()
-
-        # Genererer en unikt filnavn for bildet
-        uuid_filename = str(uuid.uuid4()) + file_extension
-        
-        # Lagrer bildet
-        save_path = os.path.join(app.config['UPLOAD_FOLDER'], uuid_filename)
-        file.save(save_path)
-        storage.child(uuid_filename).put(save_path)
-        os.remove(save_path)
-
-    return jsonify({"message": "File uploaded successfully"}), 200
-
-
-@app.route('/api/turer/add')
-def registrerTur():
-    ref = db.reference('/')
-    # ref.child('turer').push(tur)
+        return jsonify({"message": "File uploaded successfully",  "url": image_url}), 200
+    return jsonify({"error": True})
 
 
 @app.route('/api/turer/<string:bruker>')
@@ -143,10 +143,20 @@ def getEvents(bruker=None):
     ref = db.reference('turer')
     if id:
         return ref.child(id).get()
-    
+
     events = ref.get()
     return events if events else abort(404)
 
+
+@app.route('/api/topper/get')
+def getTur():
+    db = fyrebase.database()
+    data = db.child("Topper").get().val()
+    # Return data as JSON response
+    if data:
+        return jsonify(data), 200
+
+    return {"Success": True}
 
 
 if __name__ == "__main__":

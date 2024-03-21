@@ -1,3 +1,5 @@
+//obfuskert kode for å handle med cookies
+
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -28,6 +30,8 @@ function checkCookie(val) {
    return false
   }
 }
+
+
 function delCookie(name){
   getCookie(name)
   document.cookie = name + "=;"+"expires=Thu, 01 Jan 1970 00:00:00 UTC;"+ ";path=/";
