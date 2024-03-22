@@ -1,13 +1,13 @@
-import firebase_admin
-import os
-import pyrebase  # ! pip install pyrebase4 ikke pyrebase
+import firebase_admin, os, uuid, pyrebase  # ! pip install pyrebase4 ikke pyrebase
+from datetime import datetime, time
 from flask import (Flask, render_template,
                    send_from_directory, request, abort, jsonify)
 from flask_cors import CORS
 from firebase_admin import credentials, db, auth
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
-import uuid
+
+
 
 
 UPLOAD_FOLDER = 'backend\\img'
@@ -120,32 +120,42 @@ def loginUser():
 @app.route('/api/turer/add', methods=['POST'])
 def registrerTur():
 
-    ref = db.reference('/')
+    file = request.files
+    topp = request.form
+    return {"file": topp}
     if 'file' not in request.files:
-        return abort(400)
+        return abort(500)
 
     file = request.files.get('file')
-    topp = request.json.get('topp')
-    topTime = request.json.get('end')
+    topp = request.form.get('topp')
+    topTime = request.form.get('end')
+    bruker = request.form.get('uid')
+    
+
     if file.filename == '':
-        return abort(400)
+        return abort(500)
 
     if file and allowedFile(file.filename):
         image_url = uploadIMG(file)
 
-        return jsonify({"message": "File uploaded successfully",  "url": image_url}), 200
-    return jsonify({"error": True})
+
+        tur = {
+        f"{topp}": {
+            "tid": topTime,
+            "bilde": image_url
+            }
+        }
+        db.child("Turer").child(bruker).push(tur)
+        return jsonify({"message": "Trip uploaded successfully",  "url": image_url}), 200
+    return abort(401)
 
 
 @app.route('/api/turer/<string:bruker>')
 def getEvents(bruker=None):
-    id = request.args.get('i')  # for å hente parameter fra requesten
-    ref = db.reference('turer')
-    if id:
-        return ref.child(id).get()
+    
+    data = db.child("Turer").child(bruker).get().val()
 
-    events = ref.get()
-    return events if events else abort(404)
+    return data if bruker else abort(404)
 
 
 @app.route('/api/topper/get')
