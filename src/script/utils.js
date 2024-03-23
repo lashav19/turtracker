@@ -37,12 +37,16 @@ function delCookie(name){
   document.cookie = name + "=;"+"expires=Thu, 01 Jan 1970 00:00:00 UTC;"+ ";path=/";
 }
 
-const closeBtn = document.querySelector(".btn-close");
 
-closeBtn.addEventListener("click", () => {
-  const parent = closeBtn.parentElement;
-  if (parent) {
-      parent.classList.add("invisible");
-    location.reload()
-  }
-});
+
+const closeBtn = document.querySelector(".btn-close");
+if (closeBtn){ // kun hvis close button er present
+  closeBtn.addEventListener("click", () => {
+    const parent = closeBtn.parentElement;
+    if (parent) {
+        parent.classList.add("invisible");
+      location.reload()
+    }
+  });
+}
+
