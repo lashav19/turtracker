@@ -44,7 +44,7 @@ if (getCookie("uid")){
         <tr>
         <td>${makeDate(new Date(tur.tid))}</td>
         <td class="text-start">${tur.topp}</td>
-        <td class="text-center"><img src="${tur.bilde}" alt="" class="w-25"> </td>
+        <td class="text-center w-25"><a href="${tur.bilde}" class="link link-info">Se Bilde -></a> </td>
         </tr>
         `;
       }
