@@ -6,6 +6,15 @@ const turOption = document.getElementById("turOption")
 const uploadForm = document.getElementById('uploadForm')
 const user = getCookie('uid');
 
+function makeDate(dateTime){
+  const year = dateTime.getFullYear();
+  const month = ('0' + (dateTime.getMonth() + 1)).slice(-2); // Month is zero-based, so add 1
+  const day = ('0' + dateTime.getDate()).slice(-2);
+  const hours = ('0' + dateTime.getHours()).slice(-2);
+  const minutes = ('0' + dateTime.getMinutes()).slice(-2);
+
+  return `${year}-${month}-${day} ${hours}:00`;
+}
 
 if (getCookie("uid")){
   loginContainer.classList.remove("invisible")
@@ -15,6 +24,37 @@ if (getCookie("uid")){
     setCookie("uid", "", 2)
     window.location.replace("/login")
    })
+   fetch(`/api/turer/${user}`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Process the retrieved data
+    for (const key in data){
+      if (data.hasOwnProperty(key)){
+        const tur = data[key]
+        console.log(tur.bilde);
+        console.log(tur.tid);
+        
+        console.log(tur.topp);
+        mineTurer.innerHTML += `
+        <tr>
+        <td>${makeDate(new Date(tur.tid))}</td>
+        <td class="text-start">${tur.topp}</td>
+        <td class="text-center"><img src="${tur.bilde}" alt="" class="w-25"> </td>
+        </tr>
+        `;
+      }
+    }
+      
+  })
+  .catch(error => {
+    // Handle errors
+    console.error('Error:', error);
+  });
   
 } else {
   console.log(false);
@@ -22,7 +62,15 @@ if (getCookie("uid")){
   loginContainer.classList.add("invisible")
 }
 
-
+function hideModal(element){
+  const myModal = document.querySelector(element)
+  myModal.classList.remove('show');
+  myModal.setAttribute('aria-hidden', 'true');
+  var modalBackdrops = document.getElementsByClassName('modal-backdrop');
+  for (var i = 0; i < modalBackdrops.length; i++) {
+      modalBackdrops[i].parentNode.removeChild(modalBackdrops[i]);
+  }
+}
 
 
 // Wait for the DOM content to be fully loaded
@@ -59,47 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  fetch(`/api/turer/${user}`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Process the retrieved data
-    for (const key in data){
-      if (data.hasOwnProperty(key)){
-        const tur = data[key]
-        console.log(tur.bilde);
-        console.log(tur.tid);
-        
-        console.log(tur.topp);
-        mineTurer.innerHTML += `
-        <tr>
-        <td>${makeDate(new Date(tur.tid))}</td>
-        <td class="text-start">${tur.topp}</td>
-        <td class="text-center"><img src="${tur.bilde}" alt="" class="w-25"> </td>
-        </tr>
-        `;
-      }
-    }
-      
-  })
-  .catch(error => {
-    // Handle errors
-    console.error('Error:', error);
-  });
+  
 
-function makeDate(dateTime){
-  const year = dateTime.getFullYear();
-  const month = ('0' + (dateTime.getMonth() + 1)).slice(-2); // Month is zero-based, so add 1
-  const day = ('0' + dateTime.getDate()).slice(-2);
-  const hours = ('0' + dateTime.getHours()).slice(-2);
-  const minutes = ('0' + dateTime.getMinutes()).slice(-2);
 
-  return `${year}-${month}-${day} ${hours}:00`;
-}
 
 
 
@@ -175,18 +185,10 @@ function makeDate(dateTime){
   } else {
       console.error("File input element not found.");
   }
-});
+})
 
 
-
-
-
-
-
-
-
-
-  uploadForm.addEventListener('submit', (event) => {
+uploadForm.addEventListener('submit', (event) => {
     event.preventDefault();
     console.log("submitted");
 
@@ -216,6 +218,10 @@ function makeDate(dateTime){
     xhr.onload = () => {
         if (xhr.status === 200) {
             console.log("Tur laget", xhr.responseText);
+            const alert = document.querySelector(".alert")
+            alert.classList.remove("hide")
+            alert.classList.add("show")
+            hideModal("#lagTur")
         } else {
             console.error("Tur feilet:", xhr.status);
         }

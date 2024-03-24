@@ -40,6 +40,10 @@
         </ul>
       </div>
     </nav>
+    <div class="alert alert-success alert-dismissible hide" role="alert" id="turSuccess">
+      <h5>Tur har blitt lastet opp</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div class="modal fade" id="lagTur" tabindex="-1" aria-labelledby="modal-title-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -72,6 +76,7 @@
             <div class=" d-flex m-3 ">
               <button class="btn btn-secondary p-2 flex-fill" data-bs-dismiss="modal" aria-label="Cancel" type="button" onclick="document.querySelector('.btn-close').click();">Avbryt</button>
               <button class="btn btn-primary p-2 flex-fill" type="submit">Registrer</button>
+              <button type="button" class="btn btn-outline-primary" onclick="hideModal()">Close 2</button>
             </div>
           </form>
         </div>
