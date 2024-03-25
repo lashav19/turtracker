@@ -1,6 +1,6 @@
-// 
+const user = getCookie('uid') 
 
-if (getCookie("uid")){
+if (user){
     window.location.replace('/')
   }
   const form = document.querySelector('#loginForm')
@@ -21,22 +21,19 @@ if (getCookie("uid")){
       username: username,
       password: password
     })
+
     xhr.open("POST", '/api/login', true)
     xhr.setRequestHeader("Content-type", "application/json");
-
-
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = () => {
 
 
       if (xhr.readyState == 4 && xhr.status == 200) {
-        var response = xhr.responseText;
         loginButton.innerHTML = "Logg inn"
-        setCookie("uid", response, 2)
+        setCookie("uid", xhr.responseText, 2)
         document.location.replace('/')
 
-
-
       } else if (xhr.readyState == 4 && xhr.status != 200) {
+
         console.error("Error:", xhr.status);
         const alert = document.querySelector(".alert")
         alert.classList.remove("hide")

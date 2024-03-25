@@ -6,33 +6,28 @@ const turOption = document.getElementById("turOption")
 const uploadForm = document.getElementById('uploadForm')
 const user = getCookie('uid');
 
-function makeDate(dateTime){
-  const year = dateTime.getFullYear();
-  const month = ('0' + (dateTime.getMonth() + 1)).slice(-2); // Month is zero-based, so add 1
-  const day = ('0' + dateTime.getDate()).slice(-2);
-  const hours = ('0' + dateTime.getHours()).slice(-2);
-  const minutes = ('0' + dateTime.getMinutes()).slice(-2);
 
-  return `${year}-${month}-${day} ${hours}:00`;
-}
 
-if (getCookie("uid")){
+if (user){
   loginContainer.classList.remove("invisible")
 
 
   logout.addEventListener('click', () => {
     setCookie("uid", "", 2)
     window.location.replace("/login")
-   })
+  })
+
    fetch(`/api/turer/${user}`)
   .then(response => {
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(`Feil med å hente turer for ${user}`)
+    } else{
+      
     }
     return response.json();
   })
   .then(data => {
-    // Process the retrieved data
+    // Henter sub keys i dataen
     for (const key in data){
       if (data.hasOwnProperty(key)){
         const tur = data[key]
@@ -52,8 +47,7 @@ if (getCookie("uid")){
       
   })
   .catch(error => {
-    // Handle errors
-    console.error('Error:', error);
+    console.error('en feil har oppstått')
   });
   
 } else {

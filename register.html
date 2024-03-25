@@ -17,25 +17,26 @@
   </head>
   <body>
     <div class="container-sm-fluid p-3">
-      <a
-        href="index.html"
-        class="text-info-emphasis link-opacity-100-hover"
-      >
+      <a href="index.html" class="text-info-emphasis link-opacity-100-hover">
         ← Tilbake</a
       >
     </div>
-    <div class="container shadow p-5 mt-5 text-center bg-body-tertiary w-75">
-
+    <div class="container shadow p-3 mt-5 text-center bg-body-tertiary w-75">
       <div class="alert alert-danger alert-dismissible fade hide" role="alert">
         <h5>En feil har oppstått</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
 
       <h1>Registrer</h1>
 
       <div class="container-fluid text-start px-3">
         <div class="p-3">
-          <form id="loginForm" action="">
+          <form id="registerForm" action="">
             <div class="form-floating container-sm-fluid">
               <input
                 type="text"
@@ -48,17 +49,17 @@
             </div>
             <div class="pt-3">
               <div class="form-floating container-sm-fluid text-start">
-              
                 <input
-                  type="text"
+                  type="password"
                   name="password"
                   id="password"
                   class="form-control"
                   placeholder="password"
                 />
-                <label for="password" >Lag et passord</label>
-                <button class="btn btn-primary p-3 mt-2 w-100 mb-3">Logg inn</button>
-                
+                <label for="password">Lag et passord</label>
+                <button class="btn btn-primary p-3 mt-2 w-100 mb-3">
+                  Logg inn
+                </button>
               </div>
             </div>
           </form>
@@ -70,36 +71,34 @@
     </div>
   </body>
   <script defer>
-    const form = document.querySelector('#registerForm')
-    form.addEventListener('submit', (event) => {
-      event.preventDefault()
+    const form = document.querySelector("#registerForm");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
       console.log("Submitted");
-      const username = document.querySelector("#username").value
-      const password = document.querySelector("#password").value
+      const username = document.querySelector("#username").value;
+      const password = document.querySelector("#password").value;
 
-      const xhr = new XMLHttpRequest()
+      const xhr = new XMLHttpRequest();
 
       var reqBody = JSON.stringify({
         username: username,
-        password: password
-      })
+        password: password,
+      });
 
-      xhr.open("POST", '/api/register', true)
+      xhr.open("POST", "/api/register", true);
       xhr.setRequestHeader("Content-type", "application/json");
 
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
           var response = xhr.responseText;
-          window.location.replace('/login')
-          
+          window.location.replace("/login");
         } else if (xhr.readyState == 4 && xhr.status != 200) {
           console.error("Error:", xhr.status);
         }
       };
       console.log("request sent");
       xhr.send(reqBody);
-    })
+    });
   </script>
   <script src="src/script/utils.js"></script>
-  
 </html>

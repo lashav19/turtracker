@@ -19,17 +19,21 @@
   </head>
   <body>
     <div class="container-sm-fluid p-3">
-      <a
-        href="index.html"
-        class="text-info-emphasis link-opacity-100-hover"
-      >
+      <a href="index.html" class="text-info-emphasis link-opacity-100-hover">
         ← Tilbake</a
       >
     </div>
-    <div class="container-sm shadow mt-5 text-center bg-body-tertiary w-75 py-0 rounded-3">
+    <div
+      class="container-sm shadow mt-5 text-center bg-body-tertiary w-75 py-0 rounded-3"
+    >
       <div class="alert alert-danger alert-dismissible hide" role="alert">
         <h5>Feil brukernavn eller passord</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
       <h1>Logg inn</h1>
       <div class="container-fluid text-start px-3">
@@ -47,17 +51,17 @@
             </div>
             <div class="pt-3">
               <div class="form-floating container-sm-fluid text-start">
-              
                 <input
-                  type="text"
+                  type="password"
                   name="password"
                   id="password"
                   class="form-control"
                   placeholder="password"
                 />
-                <label for="password" >Passord</label>
-                <button class="btn btn-primary p-3 mt-2 w-100 mb-3"> Logg inn</button>
-                
+                <label for="password">Passord</label>
+                <button class="btn btn-primary p-3 mt-2 w-100 mb-3">
+                  Logg inn
+                </button>
               </div>
             </div>
           </form>
@@ -68,6 +72,7 @@
       </div>
     </div>
     <script src="src/script/utils.js"></script>
-    <script src="src/script/login.js" defer></script> <!-- defer for å passe på at den loader etter alt annet-->
+    <script src="src/script/login.js" defer></script>
+    <!-- defer for å passe på at den loader etter alt annet-->
   </body>
 </html>

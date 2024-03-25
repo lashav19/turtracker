@@ -50,3 +50,12 @@ if (closeBtn){ // kun hvis close button er present
   });
 }
 
+function makeDate(dateTime){
+  const year = dateTime.getFullYear();
+  const month = ('0' + (dateTime.getMonth() + 1)).slice(-2); // Month is zero-based, so add 1
+  const day = ('0' + dateTime.getDate()).slice(-2);
+  const hours = ('0' + dateTime.getHours()).slice(-2);
+  const minutes = ('0' + dateTime.getMinutes()).slice(-2);
+
+  return `${year}-${month}-${day} ${hours}:00`;
+}

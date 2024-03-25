@@ -2,21 +2,14 @@ import firebase_admin
 import os
 import uuid
 import pyrebase  # ! pip install pyrebase4 ikke pyrebase
-from datetime import datetime, time
-from flask import (Flask, render_template,
-                   send_from_directory, request, abort, jsonify)
-from flask_cors import CORS
-from firebase_admin import credentials, db, auth
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
-
-
-UPLOAD_FOLDER = 'backend\\img'
-ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
-
-
-def allowedFile(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+from flask_cors import CORS
+from firebase_admin import credentials, auth
+from flask import (
+    Flask, render_template,
+    send_from_directory, request,
+    abort, jsonify)
 
 
 load_dotenv()  # * Laster inn .env filen i environment
@@ -40,29 +33,29 @@ firebase_admin.initialize_app(cred, {
 db = fyrebase.database()
 
 app = Flask(__name__, template_folder='../')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = 'backend\\img'
 
 
 def uploadIMG(file):
 
-    storage = fyrebase.storage()  # firebase storage
-    # Henter fil extension som png, jpeg osv
+    storage = fyrebase.storage()  # * firebase storage
+    # * Henter fil extension som png, jpeg osv
     original_filename = secure_filename(file.filename)
     file_extension = os.path.splitext(original_filename)[1].lower()
 
-    # Genererer en unikt filnavn for bildet
+    # * Genererer en unikt filnavn for bildet
     uuid_filename = str(uuid.uuid4()) + file_extension
 
-    # Lagrer bildet
+    # * Lagrer bildet
     save_path = os.path.join(app.config['UPLOAD_FOLDER'], uuid_filename)
     file.save(save_path)
     storage.child(uuid_filename).put(save_path)
     os.remove(save_path)
-    # Henter URL'en for bildet
+    # * Henter URL'en for bildet
     image_url = storage.child(uuid_filename).get_url(None)
     return image_url
 
-# ? Page endpoints
+# ? Page / static endpoints
 
 
 @app.route('/')
@@ -98,51 +91,62 @@ def registerUser():
         )
         return jsonify(user.uid)
     except Exception as e:
-        print(e)
-        return abort(500)
+        print("error:", e)
+        return abort(500)  # * returnerer
 
 
 @app.route('/api/login', methods=['POST'])
 def loginUser():
-    auth = fyrebase.auth()
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
+    auth = fyrebase.auth()  # * autentisering
+
+    # * Henter brukernavn og passord fra request
+    username = request.json.get('username')
+    password = request.json.get('password')
     try:
-        # Henter bruker fra firebase auth basert på brukernavn
+        # * Henter bruker fra firebase auth basert på brukernavn
         user = auth.sign_in_with_email_and_password(
             f"{username}@example.com", password)
-        return user['localId']
+
+        # * Returnerer brukerID hvis den er successful
+        return user.get('localId')
     except Exception as e:
-        print("Error logging in:", e)
-        return abort(401)  # 401 error hvis det er feil brukernavn
+        print("error:", e)
+        # * 401 unauthorized error hvis det er feil brukernavn eller passord
+        return abort(401)
 
 
 @app.route('/api/turer/add', methods=['POST'])
 def registrerTur():
-    if 'file' not in request.files:
-        return abort(500)
+    try:
+        if 'file' not in request.files:  # * Sjekker om det er filer i requesten
+            # * Gir tilbake en bad request error hvis det ikke er en fil som blir submittet
+            return abort(400)
 
-    file = request.files.get('file')
-    topp = request.form.get('topp')
-    topTime = request.form.get('end')
-    bruker = request.form.get('uid')
+        file = request.files.get('file')
+        topp = request.form.get('topp')
+        topTime = request.form.get('end')
+        bruker = request.form.get('uid')
 
-    if file.filename == '':
-        return abort(500)
+        if file.filename == '':
+            # * Gir en 406 Not acceptable error hvis filnavnet er tomt
+            return abort(406)
 
-    if file and allowedFile(file.filename):
-        image_url = uploadIMG(file)
+        # * Hvis filen eksisterer så går den gjennom
+        if file:
+            image_url = uploadIMG(file)
 
-        tur = {
-            "topp": topp,
-            "tid": topTime,
-            "bilde": image_url
-        }
+            tur = {
+                "topp": topp,
+                "tid": topTime,
+                "bilde": image_url
+            }
 
-        db.child("Turer").child(bruker).push(tur)
-        return jsonify({"message": "Trip uploaded successfully",  "url": image_url}), 200
-    return abort(401)
+            # * Lager en child issue av BrukerID sin tur i databasen
+            db.child("Turer").child(bruker).push(tur)
+            # ? returnerer 200 success når den
+            return jsonify({"message": "Trip uploaded successfully"}), 200
+    except Exception as e:
+        return abort(500)  # * Returnerer server error hvis en feil oppstår
 
 
 @app.route('/api/turer/<string:bruker>')
@@ -150,7 +154,8 @@ def getEvents(bruker=None):
 
     data = db.child("Turer").child(bruker).get().val()
 
-    return data if bruker else abort(404)
+    # * Hvis en bruker har data så får den data, ellers så får du ingenting
+    return data if bruker and data else {"tur": None, "topp": None, "tid": None}
 
 
 @app.route('/api/topper/get')
@@ -158,10 +163,8 @@ def getTur():
     db = fyrebase.database()
     data = db.child("Topper").get().val()
     # Return data as JSON response
-    if data:
-        return jsonify(data), 200
-
-    return {"Success": True}
+    # * Returnerer data hvis den eksisterer, ellers så returnerer den 404 not found
+    return jsonify(data) if data else abort(404)
 
 
 if __name__ == "__main__":
